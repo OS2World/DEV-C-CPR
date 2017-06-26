@@ -1,0 +1,72 @@
+#****************************************************************************
+# $Logfile:$
+# $Revision:$
+# $Date:$
+# $Author:$
+#
+# Argo Data Resource Corporation
+# 15301 N. Dallas Parkway, Suite 740
+# Dallas, Texas    75248
+#
+#****************************************************************************
+
+#****************************************************************************
+#SOURCE MODULE NAME
+# CPR - nmake file for the DOS version of CPR
+#
+#   DATE   MAINTENANCE DESCRIPTION
+# -------- -----------------------------------------------------------------
+# 08/01/91 DRP - Initial creation.
+#****************************************************************************
+
+PROGP=cpr
+#****************************************************************************
+# OBJECT MACROS - List of all object modules that make up program
+#****************************************************************************
+ODIR=
+OFILES1= $(ODIR)cpr.obj
+
+LINC=
+LINCS=
+
+#****************************************************************************
+# LIBRARY MACROS - List of all libraries used to resolve external references
+#****************************************************************************
+LDIR=
+LFILES=
+
+#****************************************************************************
+# COMPILATION AND BUILD MACROS
+#****************************************************************************
+CC=cl
+AS=masm
+
+# *** UNCOMMENT NEXT LINE FOR A DEBUG COMPILE ***
+# DEBUG=1
+
+! IFDEF DEBUG
+CFLAGS=-c -AL -Od -J -Zlip -Gs -W4 -Fo$(ODIR)$(@B).obj
+LFLAGS=/CO /NOD /NOE /NOI /SE:0x80 /ST:0x1000
+! ELSE
+CFLAGS=-c -AL -Oas -J -Zlp -Gs -W4 -Fo$(ODIR)$(@B).obj
+LFLAGS=/EXEPACK /NOD /NOE /NOI /SE:0x80 /ST:0x1000
+! ENDIF
+
+#****************************************************************************
+# DEFAULT INFERENNCE RULES
+#****************************************************************************
+.c{$(ODIR)}.obj:
+   $(CC) $(CFLAGS) $(@B).c
+
+#****************************************************************************
+# PRIMARY INFERENCE RULE - Build the executable...
+#****************************************************************************
+$(PROGP).exe: $(OFILES1) $(LFILES) $(PROGP).lnk $(PROGP)
+	link $(LFLAGS) @$(PROGP).lnk
+
+#****************************************************************************
+# SPECIAL INFERENCE RULES
+#****************************************************************************
+
+$(ODIR)cpr.obj:	cpr.c $(LINCS)
+
